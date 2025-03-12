@@ -9,6 +9,7 @@ export default function JobSearch() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+    const [searched, setSearched] = useState(false);
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const searchJobs = async (e) => {
     e.preventDefault();
