@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [newSkill, setNewSkill] = useState("");
@@ -59,36 +59,30 @@ const Profile = () => {
       .catch((error) => console.error("Error updating skill:", error));
   };
 
-  // Delete skill
-  const deleteSkill = (index) => {
-    axios
-      .post(`${apiUrl}/api/user/profile/${userId}/skills`, {
-        action: "delete",
-        skillIndex: index,
-      })
-      .then((response) => {
-        setUser((prev) => ({ ...prev, skills: response.data.skills }));
-      })
-      .catch((error) => console.error("Error deleting skill:", error));
-  };
+    // Search for jobs
+    const searchJobs = async () => {
+        if (!user || !user.skills.length) {
+            alert("Add at least one skill to search for jobs.");
+            return;
+        }
 
-  // Search Jobs
-  const searchJobs = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSearched(true);
-    try {
-      const response = await axios.get(`${apiUrl}/api/user/search-jobs`, {
-        params: { query, location, jobType, datePosted },
-      });
-      setJobs(response.data);
-    } catch (err) {
-      setError("Error fetching jobs. Please try again.");
-      toast.error(setError)
-    }
-    setLoading(false);
-  };
+        setLoadingJobs(true);
+        try {
+            const query = user.skills.join(" "); // Use all user skills for the job search
+            const response = await axios.get(`${apiUrl}/api/user/search-jobs`, {
+                params: {
+                    query,
+                    location: "India",
+                    jobType: "Fulltime",
+                    datePosted: "today",
+                },
+            });
+            setJobs(response.data);
+        } catch (error) {
+            console.error("Error fetching jobs:", error);
+        }
+        setLoadingJobs(false);
+    };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-6">
