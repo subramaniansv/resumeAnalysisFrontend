@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 export default function JobSearch() {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("india");
@@ -22,6 +22,7 @@ export default function JobSearch() {
       setJobs(response.data);
     } catch (err) {
       setError("Error fetching jobs. Please try again.");
+      toast.error("error in server")
     }
     setLoading(false);
   };
