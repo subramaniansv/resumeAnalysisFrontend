@@ -9,11 +9,13 @@ export default function JobSearch() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [searched, setSearched] = useState(false);
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const searchJobs = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSearched(true);
     try {
       const response = await axios.get(`${apiUrl}/api/user/search-jobs`, {
         params: { query, location, jobType, datePosted },
@@ -63,27 +65,41 @@ export default function JobSearch() {
           <option value="week">This Week</option>
           <option value="month">This Month</option>
         </select>
-        <button type="submit" className="col-span-2 bg-blue-500 text-white p-2 rounded">Search</button>
+        <button
+          type="submit"
+          className="col-span-2 bg-blue-500 text-white p-2 rounded"
+        >
+          Search
+        </button>
       </form>
 
       {loading && <p className="mt-4">Loading jobs...</p>}
       {error && <p className="mt-4 text-red-500">{error}</p>}
-      
+
       <div className="mt-6">
-        {jobs.length > 0 ? (
-          jobs.map((job, index) => (
-            <div key={index} className="border p-4 rounded mb-4">
-              <h3 className="text-xl font-bold">{job.job_title}</h3>
+        {!loading && searched && jobs.length === 0 && (
+          <p className="text-gray-500 text-center text-lg">No jobs found.</p>
+        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {jobs.map((job, index) => (
+            <div
+              key={index}
+              className="border p-4 rounded-lg shadow-lg hover:shadow-xl transition duration-300"
+            >
+              <h3 className="text-lg font-bold">{job.job_title}</h3>
               <p className="text-gray-600">{job.location}</p>
               <p className="text-gray-500">{job.employment_type}</p>
-              <a href={job.job_apply_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+              <a
+                href={job.job_apply_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline"
+              >
                 Apply Now
               </a>
             </div>
-          ))
-        ) : (
-          <p className="mt-4">No jobs found.</p>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );

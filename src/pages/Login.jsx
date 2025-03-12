@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from "react-toastify";
 import {useNavigate} from'react-router-dom';
 const Login = () => {
   const [name, setName] = useState("");
@@ -15,23 +16,23 @@ const Login = () => {
     if(isLogin){
       try {
         const res = await axios.post(`${apiUrl}/api/user/login`, { email, password });
-          alert("Login successfull");
+          toast.success("Login successfull");
           console.log(res.data);
           localStorage.setItem("token",res.data.token);
           localStorage.setItem("userId", res.data.userId);
           navigate("/");
       } catch (error) {
-        alert(error.response.data.message);
+        toast.error(error.response.data.message);
       }
     }else{
       try {
         const res = await axios.post(`${apiUrl}/api/user/register`,{name,email,password});
-        alert("Sign up successful");
+        toast.success("Sign up successful");
         localStorage.setItem("token",res.data.token);
         localStorage.setItem("userId", res.data.userId)
         navigate("/");
       } catch (error) {
-        alert(error.response.data.message);
+        toast.error(error.response.data.message);
         console.log(error)
       }
     }   

@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 const UploadResume = () => {
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -51,7 +51,7 @@ const UploadResume = () => {
 
   const applyJobs = () => {
     if (!resumeData || !resumeData.skills || resumeData.skills.length === 0) {
-      alert("Please upload a resume with skills");
+      toast.error("Please upload a resume with skills");
       return;
     }
   
@@ -86,7 +86,7 @@ const UploadResume = () => {
   
   const seeReport = () => {
     if (!resumeData) {
-      alert("Please upload a resume!");
+      toast.error("Please upload a resume!");
       return;
     }
 
